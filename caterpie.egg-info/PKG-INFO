@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: caterpie
+Version: 0.0.4
+Summary: ORM for uploading CSVs to a postgresql database with python and pandas.
+Home-page: UNKNOWN
+Author: Saad Khan
+Author-email: skhan8@mail.einstein.yu.edu
+License: GPL
+Description: UNKNOWN
+Keywords: orm database
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Topic :: Utilities
+Classifier: License :: OSI Approved :: GPL License
