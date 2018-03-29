@@ -45,6 +45,8 @@ def get_columns(table, conn):
 
 def create_table(table, types_dict, conn):
     """ Creates table with paramaters specified by the types_dict. """
+
+    print("Creating table {0}".format(table))
     curr = conn.cursor()
     code = "CREATE TABLE {0} (".format(table)
     columns = ["{0} {1}".format(column, types_dict[column]) for column in types_dict]
@@ -55,13 +57,14 @@ def create_table(table, types_dict, conn):
 
 def drop_table(table, conn):
     """ Deletes table if it exists in connected db. """
-
+    print("Dropping table {0}".format(table))
     curr = conn.cursor()
     curr.execute("DROP TABLE IF EXISTS {0}".format(table))
     conn.commit()
 
 def add_columns(table, update_dict, conn):
 
+    print("Adding columns {0} to table {1}".format(str(update_dict), table))
     curr = conn.cursor()
     code = "ALTER TABLE {0} ".format(table)
     updates = ["ADD COLUMN {0} {1}".format(column, column_type) for column, column_type in update_dict.items()]
