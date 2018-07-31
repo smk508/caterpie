@@ -1,14 +1,15 @@
 import psycopg2
 import caterpie
-from caterpie.postgres_utils import *
+from caterpie import postgres_utils as pg_backend
+from caterpie import sqlite_utils as sqlite_backend
 import abc
 import pandas as pd
 
-class CSV:
+class Table(abc) :
 
-    def __init__(self, df, types_dict, name = ''):
+    def __init__(self, source, types_dict, name = '', **kwargs):
 
-        self.load(df)
+        self.load(source, **kwargs)
         self.types_dict = types_dict
         self.table_name = clean(name)
 
@@ -16,28 +17,39 @@ class CSV:
 
     def postprocess(self): pass # Can perform cleanup operations after writing
 
-    def load(self, df, index_col = None):
-        """ Converts csv into dataframe. """
-        if type(df) is pd.DataFrame:
-            self.df = df # NOTE: Assume argument is df for now.
-        elif type(df) is str:
-            self.df = pd.read_csv(df, index_col=index_col)
-        else:
-            raise TypeError("df must be a pandas dataframe or path to csv file on disk.")
+    @abc.abstractmethod
+    def load(self, source): pass
 
     def unload(self):
         """ Removes df to clean memory. """
-        self.df = None
+        self.message = None
         self.types_dict = None
 
     def infer_types(self): pass # Possible for future
 
+class CSV(Table):
+
+    def load(self, message, index_col = None):
+        """ Converts csv into dataframe. """
+        if type(message) is pd.DataFrame:
+            self.message = df # NOTE: Assume argument is df for now.
+        elif type(message) is str:
+            self.message = pd.read_csv(df, index_col=index_col)
+        else:
+            raise TypeError("df must be a pandas dataframe or path to csv file on disk.")
+
+class SourceTable(Table):
+
+    def load(self, source):
+        self.message = source.read()
+
 class Writer:
 
-    def __init__(self, csvs, conn):
+    def __init__(self, csvs, conn, backend='sqlite'):
 
         self.conn = conn
         self.csvs = csvs
+        self.backend = set_backend(backend)
 
     def write_tables(self): # TODO: Should be idempotent and add columns as needed
         """ Loop through csvs and call COPY FROM command to import them. """
@@ -59,8 +71,17 @@ class Writer:
             add_columns(csv.table_name, alterations, self.conn)
 
         # Add rows
-        update_table(csv.table_name, csv.df, self.conn, columns = list(csv.types_dict.keys()))
+        update_table(csv.table_name, csv.message, self.conn, columns = list(csv.types_dict.keys()))
 
     def table_up_to_date(self, csv):
         """ Determined if csv needs to be written/updated or if it is already in database. """
         return False
+
+def set_backend(backend):
+
+    if backend == 'postgresql':
+        return pg_backend
+    if backend == 'sqlite':
+        return sqlite_backend
+    else:
+        raise ValueError("Backend {backend} does not exist.".format(backend=backend))
