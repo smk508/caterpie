@@ -3,15 +3,18 @@ import caterpie
 from caterpie import postgres_utils as pg_backend
 from caterpie import sqlite_utils as sqlite_backend
 import abc
+from abc import ABC
 import pandas as pd
 
-class Table(abc) :
+backend = pg_backend
+
+class Table(ABC):
 
     def __init__(self, source, types_dict, name = '', **kwargs):
 
         self.load(source, **kwargs)
         self.types_dict = types_dict
-        self.table_name = clean(name)
+        self.table_name = backend.clean(name)
 
     def preprocess(self): pass # Can perform operations before writing
 
@@ -32,9 +35,9 @@ class CSV(Table):
     def load(self, message, index_col = None):
         """ Converts csv into dataframe. """
         if type(message) is pd.DataFrame:
-            self.message = df # NOTE: Assume argument is df for now.
+            self.message = message # NOTE: Assume argument is df for now.
         elif type(message) is str:
-            self.message = pd.read_csv(df, index_col=index_col)
+            self.message = pd.read_csv(message, index_col=index_col)
         else:
             raise TypeError("df must be a pandas dataframe or path to csv file on disk.")
 
@@ -55,8 +58,8 @@ class Writer:
         """ Loop through csvs and call COPY FROM command to import them. """
         for csv in self.csvs:
             csv.preprocess()
-            if not table_exists(csv.table_name, self.conn):
-                create_table(csv.table_name, csv.types_dict, self.conn)
+            if not backend.table_exists(csv.table_name, self.conn):
+                backend.create_table(csv.table_name, csv.types_dict, self.conn)
             if not self.table_up_to_date(csv): # TODO: Should check if data is already present
                 self.update_table(csv)
             csv.postprocess()
@@ -65,13 +68,13 @@ class Writer:
 
         # Add columns if needed
         alterations = {key: value for key, value in csv.types_dict.items()
-                        if not column_in_table(csv.table_name, key, self.conn)}
+                        if not backend.column_in_table(csv.table_name, key, self.conn)}
         if alterations:
             print("Adding columns {0} to table {1}".format(alterations, csv.table_name))
-            add_columns(csv.table_name, alterations, self.conn)
+            backend.add_columns(csv.table_name, alterations, self.conn)
 
         # Add rows
-        update_table(csv.table_name, csv.message, self.conn, columns = list(csv.types_dict.keys()))
+        backend.update_table(csv.table_name, csv.message, self.conn, columns = list(csv.types_dict.keys()))
 
     def table_up_to_date(self, csv):
         """ Determined if csv needs to be written/updated or if it is already in database. """

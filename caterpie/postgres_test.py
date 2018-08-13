@@ -56,7 +56,7 @@ def test_csv():
     assert csv.table_name == 'test'
     for key in types_dict:
         assert csv.types_dict[key] == types_dict[key]
-    assert csv.df.equals(df)
+    assert csv.message.equals(df)
 
 def test_update_table():
 
