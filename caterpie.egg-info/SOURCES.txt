@@ -1,6 +1,0 @@
-caterpie/__init__.py
-caterpie/table.py
-caterpie.egg-info/PKG-INFO
-caterpie.egg-info/SOURCES.txt
-caterpie.egg-info/dependency_links.txt
-caterpie.egg-info/top_level.txt
