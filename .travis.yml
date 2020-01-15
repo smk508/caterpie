@@ -8,7 +8,7 @@ before_install:
     - pip install poetry
 install:
     - poetry build
-    - pip install -r requirements.txt
+    - pip install -r requirements.txt # For some reason, 'poetry install' doesn't work.
 script:
     - pytest --cov=./
     # Add scripts for linting

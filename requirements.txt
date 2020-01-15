@@ -1,5 +1,4 @@
 attrs==19.3.0
--e git+https://github.com/smk508/caterpie.git@79bc7562ce5db8ebedae562b753b702746e704a8#egg=caterpie
 configparser==4.0.2
 importlib-metadata==1.4.0
 more-itertools==8.1.0
