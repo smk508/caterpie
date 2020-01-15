@@ -17,5 +17,5 @@ names = "^0.3.0"
 psycopg2-binary = "^2.8.4"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry>=0.12", "pytest-cov>=2.8.1"]
 build-backend = "poetry.masonry.api"
