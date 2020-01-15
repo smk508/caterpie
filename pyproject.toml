@@ -3,7 +3,7 @@ name = "caterpie"
 version = "0.1.0"
 description = "Lightweight ORM for uploading CSV files to a relational database."
 authors = ["smk508 <skhan8@mail.einstein.yu.edu>"]
-license = "GNU"
+license = "GPLv3"
 
 [tool.poetry.dependencies]
 python = "^3.6"
