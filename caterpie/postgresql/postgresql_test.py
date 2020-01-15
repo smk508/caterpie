@@ -1,7 +1,7 @@
 import psycopg2
-import caterpie
+from caterpie import postgresql
 from caterpie import CSV, Writer
-import caterpie.postgres_utils as pu
+import caterpie.postgresql.postgresql_utils as pu
 import pandas as pd
 
 
@@ -31,7 +31,7 @@ def make_test():
                 'pregnant': 'BOOLEAN',
                 'lactating': 'BOOLEAN',
                 'NCBI_accession': 'CHAR(10)'
-    }
+        }
 
     return df, types_dict
 
@@ -56,11 +56,11 @@ def test_csv():
     assert csv.table_name == 'test'
     for key in types_dict:
         assert csv.types_dict[key] == types_dict[key]
-    assert csv.df.equals(df)
+    assert csv.message.equals(df)
 
 def test_update_table():
 
-    conn = caterpie.get_connection()
+    conn = postgresql.get_connection()
     curr = conn.cursor()
     table_name = 'update_test'
     pu.drop_table(table_name, conn)
@@ -78,7 +78,7 @@ def test_update_table():
 
 def test_write_tables():
 
-    conn = caterpie.get_connection()
+    conn = postgresql.get_connection()
     curr = conn.cursor()
     table_name = 'write_test'
     pu.drop_table(table_name, conn)

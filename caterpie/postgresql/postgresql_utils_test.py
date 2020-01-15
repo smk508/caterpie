@@ -1,6 +1,6 @@
 import psycopg2  as pg
-import caterpie
-from caterpie import postgres_utils as pu
+from caterpie import postgresql
+from caterpie.postgresql import postgresql_utils as pu
 import pandas as pd
 import random
 import names
@@ -29,7 +29,7 @@ def count_none(iterable):
 
 def test_table_exists():
 
-    conn = caterpie.get_connection()
+    conn = postgresql.get_connection()
     table_name = 'existence'
     pu.drop_table(table_name, conn)
     make_dummy_table(conn, table_name)
@@ -39,7 +39,7 @@ def test_table_exists():
 
 def test_column_in_table():
 
-    conn = caterpie.get_connection()
+    conn = postgresql.get_connection()
     table_name = 'columnz'
     pu.drop_table(table_name, conn)
     make_dummy_table(conn, table_name)
@@ -49,7 +49,7 @@ def test_column_in_table():
 
 def test_get_columns():
 
-    conn = caterpie.get_connection()
+    conn = postgresql.get_connection()
     table_name = 'get_column'
     pu.drop_table(table_name, conn)
     make_dummy_table(conn, table_name)
@@ -61,7 +61,7 @@ def test_get_columns():
 
 def test_create_and_delete():
 
-    conn = caterpie.get_connection()
+    conn = postgresql.get_connection()
     types_dict = {
         "id": "INT",
         "name": "VARCHAR(40)"
@@ -82,7 +82,7 @@ def test_random_string():
 
 def test_add_columns():
 
-    conn = caterpie.get_connection()
+    conn = postgresql.get_connection()
     table_name = 'add_column'
     pu.drop_table(table_name, conn)
     make_dummy_table(conn,table_name)
@@ -100,7 +100,7 @@ def test_add_columns():
 
 def test_update_table():
 
-    conn = caterpie.get_connection()
+    conn = postgresql.get_connection()
     table_name = 'update'
     pu.drop_table(table_name, conn)
     make_dummy_table(conn, table_name)
