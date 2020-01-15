@@ -6,6 +6,7 @@ python:
     - "3.8"
 before_install:
     - pip install poetry
+    - pip install pytest-cov
 install:
     - poetry build
     - pip install -r requirements.txt # For some reason, 'poetry install' doesn't work.
