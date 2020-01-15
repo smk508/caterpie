@@ -1,13 +1,8 @@
-import psycopg2 as pg
 import configparser
 import os
-from caterpie.postgres import CSV, Writer
+from caterpie.table import CSV, Writer
 
 filename = os.path.join(os.path.expanduser('~'), '.caterpie.config')
-
-def get_connection():
-    conn_string = "user=%s password=%s dbname=%s host=%s port = %s" % (username, password, dbname, host, port)
-    return pg.connect(conn_string)
 
 def save_config(filename = filename):
 

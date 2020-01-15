@@ -1,6 +1,6 @@
 import psycopg2  as pg
 import caterpie
-from caterpie import postgres_utils as pu
+from caterpie.postgresql import postgresql_utils as pu
 import pandas as pd
 import random
 import names

@@ -1,9 +1,5 @@
-setup.py
 caterpie/__init__.py
-caterpie/postgres.py
-caterpie/postgres_test.py
-caterpie/postgres_utils.py
-caterpie/postgres_utils_test.py
+caterpie/table.py
 caterpie.egg-info/PKG-INFO
 caterpie.egg-info/SOURCES.txt
 caterpie.egg-info/dependency_links.txt

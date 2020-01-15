@@ -1,7 +1,7 @@
 import psycopg2
 import caterpie
 from caterpie import CSV, Writer
-import caterpie.postgres_utils as pu
+import caterpie.postgresql.postgresql_utils as pu
 import pandas as pd
 
 

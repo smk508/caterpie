@@ -1,12 +1,7 @@
-import psycopg2
 import caterpie
-from caterpie import postgres_utils as pg_backend
-from caterpie import sqlite_utils as sqlite_backend
 import abc
 from abc import ABC
 import pandas as pd
-
-backend = pg_backend
 
 class Table(ABC):
 
@@ -48,7 +43,7 @@ class SourceTable(Table):
 
 class Writer:
 
-    def __init__(self, csvs, conn, backend='sqlite'):
+    def __init__(self, csvs, conn, backend='postgresql'):
 
         self.conn = conn
         self.csvs = csvs
@@ -83,8 +78,16 @@ class Writer:
 def set_backend(backend):
 
     if backend == 'postgresql':
+        try:
+            from caterpie.postgres import postgresql_utils as pg_backend
+        except ImportError as e:
+            raise ImportError("In order to use the postgresql backend, you must have psycopg2 installed. \
+                You can install using 'pip3 install psycopg2' or 'pip3 install psycopg2-binary' \
+                Additional error messages: {error}".format(error=e))
         return pg_backend
     if backend == 'sqlite':
+        raise NotImplementedError
+        from caterpie.sqlite import sqlite_utils as sqlite_backend
         return sqlite_backend
     else:
         raise ValueError("Backend {backend} does not exist.".format(backend=backend))
